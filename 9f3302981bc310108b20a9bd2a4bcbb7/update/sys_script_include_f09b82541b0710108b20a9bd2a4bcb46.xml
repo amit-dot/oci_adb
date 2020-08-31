@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>public</access>
+        <active>true</active>
+        <api_name>x_snc_oracle_auton.RequestAuthOCISigner</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>RequestAuthOCISigner</name>
+        <script><![CDATA[var RequestAuthOCISigner = Class.create();
+RequestAuthOCISigner.prototype = {
+    initialize: function() {},
+	
+    customOCISignature: function(authAPI) {
+        var credential = authAPI.getAuthCredential();
+        var cert_sys = credential.getAttribute('certificate_sys_id');
+        var alias_name = credential.getAttribute('alias');
+        var alias_password = credential.getAttribute('alias_password');
+        var key_id = credential.getAttribute('key_id');
+        var headers = "";
+
+        var request_data = new sn_auth.HttpRequestAuthedData();
+        var http_request_data = authAPI.getHttpRequestData();
+        var method = http_request_data.getHttpMethod();
+
+        var query_params = http_request_data.getQueryParamMap();
+        var query = "";
+        for (var param in query_params) {
+            query = (query ? query + "&" : "") + param + "=" + query_params[param];
+        }
+
+        var endpoint = http_request_data.getEndpoint();
+        var partial_endpoint = endpoint.replace("https://", "");
+        var firstindex = partial_endpoint.indexOf('/');
+        var request_target = "";
+
+        if (query != "") {
+            request_target = "(request-target): " + method + " " + endpoint.substring(firstindex + 8) + "?" + query;
+        } else {
+            request_target = "(request-target): " + method + " " + endpoint.substring(firstindex + 8);
+        }
+        headers = headers + "(request-target)";
+
+        var today = new Date();
+        var date = today.toUTCString();
+        headers = headers + " date";
+
+        var host = partial_endpoint.substring(0, partial_endpoint.indexOf('/'));
+        headers = headers + " host";
+        var signing_string = request_target + "\n" + "date: " + date + "\n" + "host: " + host;
+
+        if (method == 'post' || method == 'put' || method == 'patch') {
+            var body = http_request_data.getContent();
+            var sha256content = "";
+            var digest = new GlideDigest();
+            sha256content = digest.getSHA256Base64(body);
+
+            signing_string = signing_string + "\n" + "x-content-sha256: " + sha256content;
+            headers = headers + " x-content-sha256";
+
+            signing_string = signing_string + "\n" + "content-type: application/json";
+            headers = headers + " content-type";
+
+            var body_length = body.length;
+            signing_string = signing_string + "\n" + "content-length: " + body_length;
+            headers = headers + " content-length";
+
+            request_data.addHeader("x-content-sha256", sha256content);
+            request_data.addHeader("Content-Type", "application/json");
+        }
+        var signature = CertificateEncryption.sign(cert_sys, alias_name, alias_password, "SHA256withRSA", signing_string);
+
+        var authorization_header = "Signature version=\"1\",keyId=\"" + key_id + "\",algorithm=\"rsa-sha256\",headers=\"" + headers + "\",signature=\"" + signature + "\"";
+
+        request_data.addHeader("Authorization", authorization_header);
+        request_data.addHeader("Date", date);
+        request_data.setStatus("SUCCESS");
+        request_data.setDirective("HEADER");
+        return request_data;
+    },
+
+    generateAuth: function(authAPI) {
+        var credential = authAPI.getAuthCredential();
+        var applicationName = credential.getAttribute("authentication_for");
+        if (applicationName == "autonomous_db") {
+            return this.customOCISignature(authAPI);
+        }
+        return new sn_auth.HttpRequestAuthedData();
+    },
+
+    type: 'RequestAuthOCISigner'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>amitkumar.shukla@snc</sys_created_by>
+        <sys_created_on>2020-08-31 15:07:18</sys_created_on>
+        <sys_id>f09b82541b0710108b20a9bd2a4bcb46</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>RequestAuthOCISigner</sys_name>
+        <sys_package display_value="Oracle Autonomous DB Spoke" source="x_snc_oracle_auton">9f3302981bc310108b20a9bd2a4bcbb7</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="Oracle Autonomous DB Spoke">9f3302981bc310108b20a9bd2a4bcbb7</sys_scope>
+        <sys_update_name>sys_script_include_f09b82541b0710108b20a9bd2a4bcb46</sys_update_name>
+        <sys_updated_by>amitkumar.shukla@snc</sys_updated_by>
+        <sys_updated_on>2020-08-31 15:07:18</sys_updated_on>
+    </sys_script_include>
+</record_update>

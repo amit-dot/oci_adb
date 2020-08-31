@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="auth_algorithm">
+    <auth_algorithm action="INSERT_OR_UPDATE">
+        <agent_script/>
+        <algorithm>CustomAuth</algorithm>
+        <description>Used in Oracle ADB</description>
+        <glide_script display_value="RequestAuthOCISigner">f09b82541b0710108b20a9bd2a4bcb46</glide_script>
+        <name>OCI SHA256RSA Signing Algorithm</name>
+        <sys_class_name>auth_algorithm</sys_class_name>
+        <sys_created_by>amitkumar.shukla@snc</sys_created_by>
+        <sys_created_on>2020-08-31 15:09:13</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_id>3bebc6541b0710108b20a9bd2a4bcb01</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>OCI SHA256RSA Signing Algorithm</sys_name>
+        <sys_package display_value="Oracle Autonomous DB Spoke" source="x_snc_oracle_auton">9f3302981bc310108b20a9bd2a4bcbb7</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Oracle Autonomous DB Spoke">9f3302981bc310108b20a9bd2a4bcbb7</sys_scope>
+        <sys_update_name>auth_algorithm_3bebc6541b0710108b20a9bd2a4bcb01</sys_update_name>
+        <sys_updated_by>amitkumar.shukla@snc</sys_updated_by>
+        <sys_updated_on>2020-08-31 15:32:30</sys_updated_on>
+    </auth_algorithm>
+</record_update>
