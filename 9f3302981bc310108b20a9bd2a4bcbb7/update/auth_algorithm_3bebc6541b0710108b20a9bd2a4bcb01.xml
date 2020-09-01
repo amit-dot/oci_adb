@@ -9,6 +9,7 @@
         <sys_created_by>amitkumar.shukla@snc</sys_created_by>
         <sys_created_on>2020-08-31 15:09:13</sys_created_on>
         <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
         <sys_id>3bebc6541b0710108b20a9bd2a4bcb01</sys_id>
         <sys_mod_count>1</sys_mod_count>
         <sys_name>OCI SHA256RSA Signing Algorithm</sys_name>
@@ -19,4 +20,5 @@
         <sys_updated_by>amitkumar.shukla@snc</sys_updated_by>
         <sys_updated_on>2020-08-31 15:32:30</sys_updated_on>
     </auth_algorithm>
+    <sys_translated_text action="delete_multiple" query="documentkey=3bebc6541b0710108b20a9bd2a4bcb01"/>
 </record_update>
